@@ -16,14 +16,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      build:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@master
-          - name: Publish to Registry
-            uses: elgohr/Publish-Docker-Github-Action@master
-            with:
-              name: lexinek/hello-world
-              username: ${{ secrets.DOCKER_HUB_USER }}
-              password: ${{ secrets.DOCKER_HUB_TOKEN }}
-              cache: ${{ github.event_name != 'schedule' }}
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: lexinek/hello-world
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          cache: ${{ github.event_name != 'schedule' }}
