@@ -22,4 +22,5 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: lexinek/hello-world
-          cache: true
+          auto_tag: true
+          cache:
