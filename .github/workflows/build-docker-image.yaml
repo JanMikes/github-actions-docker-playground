@@ -30,7 +30,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build image
-        run: docker build . --tag image --cache-from lexinek/hello-world
+        run: |
+          docker pull lexinek/hello-world || true
+          docker build . --tag image --cache-from lexinek/hello-world
 
       - name: Log into registry
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
