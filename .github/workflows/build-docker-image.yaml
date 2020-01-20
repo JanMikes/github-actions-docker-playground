@@ -23,4 +23,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           repository: lexinek/hello-world
           auto_tag: true
-          cache:
+          cache: lexinek/hello-world
