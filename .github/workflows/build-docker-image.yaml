@@ -20,13 +20,7 @@ jobs:
       - name: Build image
         run: |
           docker pull lexinek/hello-world || true
-          docker build . --tag image --cache-from lexinek/hello-world
 
-      - name: Log into registry
-        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
-
-      - name: Push image
-        run: |
           # Strip git ref prefix from version
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
@@ -36,5 +30,10 @@ jobs:
           # Use Docker `latest` tag convention
           [ "$VERSION" == "master" ] && VERSION=latest
 
-          docker tag image lexinek/hello-world:$VERSION
-          docker push lexinek/hello-world
+          docker build . --tag lexinek/hello-world:$VERSION --cache-from lexinek/hello-world
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+
+      - name: Push image
+        run: docker push lexinek/hello-world
