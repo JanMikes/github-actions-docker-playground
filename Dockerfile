@@ -1,4 +1,9 @@
-FROM hello-world:linux
+FROM ubuntu:18.04
 
-ENV hello=world
-ENV world=hello
+RUN echo test1
+RUN echo test2
+RUN echo test3
+
+COPY test-file.txt test-file.txt
+
+RUN echo test4
