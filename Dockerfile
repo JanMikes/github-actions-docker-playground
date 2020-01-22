@@ -7,3 +7,4 @@ RUN echo test3
 COPY test-file.txt test-file.txt
 
 RUN echo test4
+RUN echo test5
