@@ -1,39 +1,42 @@
-name: Build docker image
-on:
-  push:
-    # Publish `master` as Docker `latest` image.
-    branches:
-      - master
+name: Deploy
 
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
-
-    # Run tests for any PRs.
-    pull_request:
+on: [push]
 
 jobs:
-  build:
+  deploy:
+    name: Deploy my app
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Build image
+      - uses: actions/checkout@v1
+
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target-url: http://my-app-url.com
+          environment: production
+
+      - name: Deploy my app
         run: |
-          docker pull lexinek/hello-world || true
+          # add your deployment code here
 
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: http://my-app-url.com
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-
-          # Use Docker `latest` tag convention
-          [ "$VERSION" == "master" ] && VERSION=latest
-
-          docker build . --tag lexinek/hello-world:$VERSION --cache-from lexinek/hello-world
-
-      - name: Log into registry
-        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
-
-      - name: Push image
-        run: docker push lexinek/hello-world
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target-url: http://my-app-url.com
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
