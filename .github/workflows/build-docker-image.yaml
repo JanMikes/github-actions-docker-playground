@@ -13,6 +13,7 @@ jobs:
         name: Create GitHub deployment
         id: github_deploy
         with:
+          initial_status: "in_progress"
           token: "${{ github.token }}"
           environment: prod
 
