@@ -29,7 +29,7 @@ jobs:
         with:
           token: "${{ github.token }}"
           target-url: http://my-app-url.com
-          state: "success"
+          state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
       - name: Update deployment status (failure)
